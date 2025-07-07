@@ -33,7 +33,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             .eq('id', session.user.id)
             .single();
           
-          setIsAdmin(profile?.role === 'admin');
+          // Considera tanto 'admin' quanto 'authenticated' como administradores
+          setIsAdmin(profile?.role === 'admin' || profile?.role === 'authenticated');
         } else {
           setIsAdmin(false);
         }
@@ -51,7 +52,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .eq('id', session.user.id)
           .single()
           .then(({ data: profile }) => {
-            setIsAdmin(profile?.role === 'admin');
+            // Considera tanto 'admin' quanto 'authenticated' como administradores
+            setIsAdmin(profile?.role === 'admin' || profile?.role === 'authenticated');
             setLoading(false);
           });
       } else {
