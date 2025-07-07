@@ -50,8 +50,8 @@ const HeroSlider = () => {
       {slides.map((slide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-transform duration-1000 ease-in-out ${
-            index === currentSlide ? 'translate-x-0' : 'translate-x-full'
+          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
             backgroundImage: `url(${slide.image})`,
