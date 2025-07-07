@@ -7,6 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Plus, Edit2, Trash2, Save } from 'lucide-react';
+import { Database } from '@/integrations/supabase/types';
+
+type SubscriptionPlanRow = Database['public']['Tables']['subscription_plans']['Row'];
 
 interface SubscriptionPlan {
   id: string;
@@ -49,7 +52,14 @@ const AdminPlansContent = () => {
         .order('order_index');
 
       if (error) throw error;
-      setPlans(data || []);
+      
+      // Transform the data to match our interface
+      const transformedPlans: SubscriptionPlan[] = (data || []).map((plan: SubscriptionPlanRow) => ({
+        ...plan,
+        features: Array.isArray(plan.features) ? plan.features as string[] : []
+      }));
+      
+      setPlans(transformedPlans);
     } catch (error) {
       toast({
         title: 'Erro',
