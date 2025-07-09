@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -9,10 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
+  const { signIn, user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({
     email: '',
     password: ''
@@ -24,33 +27,46 @@ const Login = () => {
     confirmPassword: ''
   });
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock login validation
-    if (loginData.email && loginData.password) {
-      // Check if it's admin login
-      if (loginData.email === 'admin@serenityyoga.com' && loginData.password === 'admin123') {
-        toast({
-          title: "Login de administrador realizado!",
-          description: "Redirecionando para o painel administrativo...",
-        });
+  useEffect(() => {
+    if (!loading && user) {
+      if (isAdmin) {
         navigate('/admin');
-        return;
+      } else {
+        navigate('/aulas-online');
       }
+    }
+  }, [user, isAdmin, loading, navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signIn(loginData.email, loginData.password);
       
-      // Regular user login
+      if (error) {
+        console.error('Login error:', error);
+        toast({
+          title: "Erro no login",
+          description: error.message || "Email ou senha incorretos",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Login realizado com sucesso!",
+          description: "Redirecionando...",
+        });
+        // O redirecionamento será feito automaticamente pelo useEffect
+      }
+    } catch (error) {
+      console.error('Unexpected error during login:', error);
       toast({
-        title: "Login realizado com sucesso!",
-        description: "Bem-vindo de volta!",
-      });
-      navigate('/aulas-online');
-    } else {
-      toast({
-        title: "Erro no login",
-        description: "Por favor, preencha todos os campos.",
+        title: "Erro",
+        description: "Ocorreu um erro inesperado",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -163,11 +179,12 @@ const Login = () => {
                         </div>
                       </div>
                       
-                      <Button
+                       <Button
                         type="submit"
                         className="w-full bg-gradient-to-r from-yoga-sage to-yoga-lavender hover:from-yoga-sage/90 hover:to-yoga-lavender/90 text-white py-3 text-lg font-medium"
+                        disabled={isLoading}
                       >
-                        Entrar
+                        {isLoading ? 'Entrando...' : 'Entrar'}
                       </Button>
                       
                       <div className="text-center">
