@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Home, CreditCard, Play, Users, Settings } from 'lucide-react';
+import { LogOut, Home, CreditCard, Play, Users, Settings, GraduationCap } from 'lucide-react';
 import AdminHomeContent from '@/components/admin/AdminHomeContent';
 import AdminPlansContent from '@/components/admin/AdminPlansContent';
 import AdminClassesContent from '@/components/admin/AdminClassesContent';
@@ -48,11 +48,21 @@ const AdminDashboard = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-yoga-sage to-yoga-lavender rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-sm">E</span>
               </div>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">Painel Administrativo</h1>
-                <p className="text-sm text-gray-500">Estrela Yoga</p>
-              </div>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">Painel Administrativo</h1>
+              <p className="text-sm text-gray-500">Estrela Yoga</p>
             </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => navigate('/aulas-online')}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2"
+            >
+              <GraduationCap size={16} />
+              <span>Assistir Aulas</span>
+            </Button>
             <Button
               onClick={handleSignOut}
               variant="outline"
@@ -62,6 +72,7 @@ const AdminDashboard = () => {
               <LogOut size={16} />
               <span>Sair</span>
             </Button>
+          </div>
           </div>
         </div>
       </header>
