@@ -28,8 +28,13 @@ const AdminLogin = () => {
   });
 
   useEffect(() => {
-    if (!loading && user && isAdmin) {
-      navigate('/admin');
+    if (!loading && user) {
+      if (isAdmin) {
+        navigate('/admin');
+      } else {
+        // Se o usuário está logado mas não é admin, redireciona para área do aluno
+        navigate('/aulas-online');
+      }
     }
   }, [user, isAdmin, loading, navigate]);
 
@@ -46,11 +51,17 @@ const AdminLogin = () => {
           variant: 'destructive',
         });
       } else {
-        // O redirecionamento será feito automaticamente pelo useEffect quando isAdmin for true
         toast({
           title: 'Login realizado com sucesso!',
           description: 'Redirecionando para o painel administrativo...',
         });
+        
+        // Força o redirecionamento após um pequeno delay para garantir que o estado seja atualizado
+        setTimeout(() => {
+          if (user && isAdmin) {
+            navigate('/admin');
+          }
+        }, 100);
       }
     } catch (error) {
       console.error('Unexpected error during login:', error);
