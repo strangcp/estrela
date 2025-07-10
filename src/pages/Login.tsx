@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
-  const { signIn, user, isAdmin, loading } = useAuth();
+  const { signIn, signUp, user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,8 +70,9 @@ const Login = () => {
     }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     
     if (registerData.password !== registerData.confirmPassword) {
       toast({
@@ -79,21 +80,46 @@ const Login = () => {
         description: "As senhas não coincidem.",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
     
-    if (registerData.name && registerData.email && registerData.password) {
-      toast({
-        title: "Cadastro realizado com sucesso!",
-        description: "Bem-vindo à comunidade Serenity Yoga!",
-      });
-      navigate('/aulas-online');
-    } else {
+    if (!registerData.name || !registerData.email || !registerData.password) {
       toast({
         title: "Erro no cadastro",
         description: "Por favor, preencha todos os campos.",
         variant: "destructive",
       });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await signUp(registerData.email, registerData.password, registerData.name);
+      
+      if (error) {
+        console.error('Registration error:', error);
+        toast({
+          title: "Erro no cadastro",
+          description: error.message || "Erro ao criar conta",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Cadastro realizado com sucesso!",
+          description: "Bem-vindo à comunidade Estrela Yoga! Verifique seu email para confirmar a conta.",
+        });
+        // O redirecionamento será feito automaticamente pelo useEffect
+      }
+    } catch (error) {
+      console.error('Unexpected error during registration:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -265,8 +291,9 @@ const Login = () => {
                       <Button
                         type="submit"
                         className="w-full bg-gradient-to-r from-yoga-sage to-yoga-lavender hover:from-yoga-sage/90 hover:to-yoga-lavender/90 text-white py-3 text-lg font-medium"
+                        disabled={isLoading}
                       >
-                        Criar Conta
+                        {isLoading ? 'Criando conta...' : 'Criar Conta'}
                       </Button>
                     </form>
                   </TabsContent>
