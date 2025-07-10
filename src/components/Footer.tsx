@@ -40,7 +40,7 @@ const Footer = () => {
                 <MapPin className="w-4 h-4 mr-3 text-yoga-sage mt-1" />
                 <span className="text-gray-300">
                   Rua da Paz, 123<br />
-                  São Paulo - SP
+                  Niterói - RJ
                 </span>
               </div>
             </div>
