@@ -12,6 +12,8 @@ import Login from "./pages/Login";
 import AulasOnline from "./pages/AulasOnline";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import GerenciarPerfil from "./pages/GerenciarPerfil";
+import GerenciarAssinatura from "./pages/GerenciarAssinatura";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
             <Route path="/aulas" element={<Aulas />} />
             <Route path="/login" element={<Login />} />
             <Route path="/aulas-online" element={<AulasOnline />} />
+            <Route path="/gerenciar-perfil" element={<GerenciarPerfil />} />
+            <Route path="/gerenciar-assinatura" element={<GerenciarAssinatura />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

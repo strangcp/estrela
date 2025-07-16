@@ -93,13 +93,17 @@ const Header = () => {
                     </DropdownMenuItem>
                   ) : (
                     <>
-                      <DropdownMenuItem>
-                        <Settings className="mr-2 h-4 w-4" />
-                        Gerenciar Perfil
+                      <DropdownMenuItem asChild>
+                        <NavLink to="/gerenciar-perfil" className="flex items-center">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Gerenciar Perfil
+                        </NavLink>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <CreditCard className="mr-2 h-4 w-4" />
-                        Gerenciar Assinatura
+                      <DropdownMenuItem asChild>
+                        <NavLink to="/gerenciar-assinatura" className="flex items-center">
+                          <CreditCard className="mr-2 h-4 w-4" />
+                          Gerenciar Assinatura
+                        </NavLink>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </>
@@ -155,14 +159,22 @@ const Header = () => {
                     </NavLink>
                   ) : (
                     <>
-                      <button className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2 w-full text-left">
+                      <NavLink
+                        to="/gerenciar-perfil"
+                        className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         <Settings className="mr-2 h-4 w-4" />
                         Gerenciar Perfil
-                      </button>
-                      <button className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2 w-full text-left">
+                      </NavLink>
+                      <NavLink
+                        to="/gerenciar-assinatura"
+                        className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         <CreditCard className="mr-2 h-4 w-4" />
                         Gerenciar Assinatura
-                      </button>
+                      </NavLink>
                     </>
                   )}
                   <button 
