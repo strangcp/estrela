@@ -2,17 +2,36 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, Settings, CreditCard, LogOut, Shield } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
 
-  const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Assine', path: '/assine' },
-    { name: 'Aulas', path: '/aulas' },
-    { name: 'Login', path: '/login' },
-  ];
+  const navItems = user 
+    ? [
+        { name: 'Home', path: '/' },
+        { name: 'Assine', path: '/assine' },
+        { name: 'Aulas', path: '/aulas' },
+      ]
+    : [
+        { name: 'Home', path: '/' },
+        { name: 'Assine', path: '/assine' },
+        { name: 'Aulas', path: '/aulas' },
+        { name: 'Login', path: '/login' },
+      ];
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <header className="bg-white/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
@@ -41,6 +60,57 @@ const Header = () => {
                 {item.name}
               </NavLink>
             ))}
+            
+            {/* User Menu */}
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-700 hover:text-yoga-sage"
+                  >
+                    {isAdmin ? (
+                      <>
+                        <Shield className="mr-2 h-4 w-4" />
+                        ADMINISTRADOR
+                      </>
+                    ) : (
+                      <>
+                        <User className="mr-2 h-4 w-4" />
+                        PERFIL
+                      </>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {isAdmin ? (
+                    <DropdownMenuItem asChild>
+                      <NavLink to="/admin" className="flex items-center">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Dashboard Admin
+                      </NavLink>
+                    </DropdownMenuItem>
+                  ) : (
+                    <>
+                      <DropdownMenuItem>
+                        <Settings className="mr-2 h-4 w-4" />
+                        Gerenciar Perfil
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Gerenciar Assinatura
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -70,6 +140,43 @@ const Header = () => {
                   {item.name}
                 </NavLink>
               ))}
+              
+              {/* Mobile User Menu */}
+              {user && (
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  {isAdmin ? (
+                    <NavLink
+                      to="/admin"
+                      className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Shield className="mr-2 h-4 w-4" />
+                      Dashboard Admin
+                    </NavLink>
+                  ) : (
+                    <>
+                      <button className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2 w-full text-left">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Gerenciar Perfil
+                      </button>
+                      <button className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2 w-full text-left">
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Gerenciar Assinatura
+                      </button>
+                    </>
+                  )}
+                  <button 
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center text-gray-700 hover:text-yoga-sage transition-colors duration-200 font-medium px-4 py-2 w-full text-left"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sair
+                  </button>
+                </div>
+              )}
             </div>
           </nav>
         )}
