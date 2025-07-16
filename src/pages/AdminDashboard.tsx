@@ -55,6 +55,15 @@ const AdminDashboard = () => {
           </div>
           <div className="flex items-center space-x-3">
             <Button
+              onClick={() => navigate('/')}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2"
+            >
+              <Home size={16} />
+              <span>Voltar ao Site</span>
+            </Button>
+            <Button
               onClick={() => navigate('/aulas-online')}
               variant="outline"
               size="sm"
